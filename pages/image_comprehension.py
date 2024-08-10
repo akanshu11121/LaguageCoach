@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import numpy as np
 # import sounddevice as sd
-from streamlit_audiorec import st_audiorec
+from st_audiorec import st_audiorec
 import io
 from scipy.io.wavfile import write
 import wave

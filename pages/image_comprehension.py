@@ -118,6 +118,7 @@ def app():
             if audio_data:
                 st.session_state.audio_data = audio_data
             else:
+                st.write(f"Audio data: {audio_data}")
                 st.write("NO AUDIO DATA.")
                     
             # Handle recording completion

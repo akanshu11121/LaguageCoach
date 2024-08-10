@@ -6,7 +6,6 @@ import io
 from scipy.io.wavfile import write
 import wave
 import openai
-import config
 from openai import OpenAI
 client = OpenAI(api_key=st.secters["API_KEY"])
 

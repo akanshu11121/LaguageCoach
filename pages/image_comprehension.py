@@ -109,40 +109,40 @@ def app():
             duration = 30  # seconds
             sample_rate = 44100  # Sample rate
             
-        if st.button('Stop Recording'):
-            st.write("Recording stopped")              
-            
-            # Wait for 30 seconds or until recording is finished
-            # start_time = time.time()
-            # while st.session_state.recording and (time.time() - start_time) < duration:
-            #     time.sleep(0.1)  # Small sleep to prevent busy-waiting and allow Streamlit to update
-
-            st.session_state.recording = False
-            if audio_data:
-                st.session_state.audio_data = audio_data
-            else:
-                st.write(f"Audio data: {audio_data}")
-                st.write("NO AUDIO DATA.")
-                    
-            # Handle recording completion
-            if not st.session_state.recording and st.session_state.audio_data:
-                st.write("Recording complete!")
-                st.session_state.recording_started = False
-
-                # Save the audio data as a WAV file
-                output_file = "output2.wav"
-                with wave.open(output_file, 'wb') as wf:
-                    wf.setnchannels(1)  # Mono
-                    wf.setsampwidth(2)  # Sample width in bytes
-                    wf.setframerate(sample_rate)  # Sample rate in Hz (default value)
-                    wf.writeframes(st.session_state.audio_data)
-
-                st.audio(output_file)  # Display the audio player
-                st.success(f"Audio saved to {output_file}") 
+            if st.button('Stop Recording'):
+                st.write("Recording stopped")              
                 
-                print(f"Audio saved to {output_file}")
-                user_description = speech_to_text("output2.wav")
-                model_description = describe_image(st.session_state.image_url)
-                compare_descriptions(model_description, user_description)
-            else:
-                st.write("Audio not recorded.")
+                # Wait for 30 seconds or until recording is finished
+                # start_time = time.time()
+                # while st.session_state.recording and (time.time() - start_time) < duration:
+                #     time.sleep(0.1)  # Small sleep to prevent busy-waiting and allow Streamlit to update
+
+                st.session_state.recording = False
+                if audio_data:
+                    st.session_state.audio_data = audio_data
+                else:
+                    st.write(f"Audio data: {audio_data}")
+                    st.write("NO AUDIO DATA.")
+                        
+                # Handle recording completion
+                if not st.session_state.recording and st.session_state.audio_data:
+                    st.write("Recording complete!")
+                    st.session_state.recording_started = False
+
+                    # Save the audio data as a WAV file
+                    output_file = "output2.wav"
+                    with wave.open(output_file, 'wb') as wf:
+                        wf.setnchannels(1)  # Mono
+                        wf.setsampwidth(2)  # Sample width in bytes
+                        wf.setframerate(sample_rate)  # Sample rate in Hz (default value)
+                        wf.writeframes(st.session_state.audio_data)
+
+                    st.audio(output_file)  # Display the audio player
+                    st.success(f"Audio saved to {output_file}") 
+                    
+                    print(f"Audio saved to {output_file}")
+                    user_description = speech_to_text("output2.wav")
+                    model_description = describe_image(st.session_state.image_url)
+                    compare_descriptions(model_description, user_description)
+                else:
+                    st.write("Audio not recorded.")

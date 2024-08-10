@@ -1,15 +1,14 @@
 import streamlit as st
 import requests
 import numpy as np
-from streamlit_audiorec import st_audiorec
+import sounddevice as sd
 import io
 from scipy.io.wavfile import write
 import wave
 import openai
-import os
-
+import config
 from openai import OpenAI
-client = OpenAI(api_key=st.secrets["API_KEY"])
+client = OpenAI(api_key=st.secters["API_KEY"])
 
 
 
@@ -98,25 +97,20 @@ def app():
             duration = 30  # seconds
             sample_rate = 44100  # Sample rate
             st.write('Recording started... speak now!')
-            myrecording = st_audiorec()
+            myrecording = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=1, dtype='int16')
+            sd.wait()  # Wait until recording is finished
             st.write('Recording Done!')
             st.session_state.recording_started = False
             # Convert the NumPy array to audio file
             st.write('Recording stopped.')
-            if myrecording is not None:
-                # Convert audio data to numpy array
-                audio_array = np.frombuffer(myrecording, dtype=np.int16)
-                
-                # Save the audio data as a WAV file
-                output_file = "output2.wav"
-                with wave.open(output_file, 'wb') as wf:
-                    wf.setnchannels(1)  # Mono
-                    wf.setsampwidth(2)  # Sample width in bytes
-                    wf.setframerate(44100)  # Sample rate in Hz
-                    wf.writeframes(myrecording)
+            output_file = "output2.wav"
+            with wave.open(output_file, 'w') as wf:
+                wf.setnchannels(1)  # Stereo
+                wf.setsampwidth(2)  # Sample width in bytes
+                wf.setframerate(sample_rate)
+                wf.writeframes(myrecording.tobytes())
 
-            st.audio(output_file)  # Show the audio file in the Streamlit app
-            st.success(f"Audio saved to {output_file}")
+            print(f"Audio saved to {output_file}")
             user_description = speech_to_text("output2.wav")
             model_description = describe_image(st.session_state.image_url)
             compare_descriptions(model_description, user_description)

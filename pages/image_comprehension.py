@@ -110,10 +110,9 @@ def app():
             #     wf.setsampwidth(2)  # Sample width in bytes
             #     wf.setframerate(sample_rate)
             #     wf.writeframes(myrecording.tobytes())
-                
+            output_file = "output2.wav"
             if audio_data is not None:
                 # Save the audio data as a WAV file
-                output_file = "output2.wav"
                 with wave.open(output_file, 'wb') as wf:
                     wf.setnchannels(1)  # Mono
                     wf.setsampwidth(2)  # Sample width in bytes

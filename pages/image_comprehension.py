@@ -93,44 +93,44 @@ def app():
         st.image(st.session_state.image_url, caption='Describe this image.')
         st.subheader('You have to describe and talk about what you see in the image. Take yur time look and analyse the image think about what you want to say and then start.\n You will have 30 seconds to speak about it. Focus on rich decription fluid speech.')
 
+        st.session_state.recording = False
+        st.session_state.audio_data = None
+        
         if st.button('Start Talking'):
           
-            if 'recording' not in st.session_state:
-                st.session_state.recording = False
-                st.session_state.audio_data = None
-                
-            # Start recording button
-            if st.button("Start Recording"):
-                st.session_state.recording = True
-                st.session_state.audio_data = None
-                st.write("Recording started. It will stop automatically after 30 seconds...")
+            st.session_state.recording = True
+            st.session_state.audio_data = None
+            st.write("Recording started. It will stop automatically after 30 seconds...")
 
-                # Start the recording
-                audio_data = st_audiorec()
-          
-                st.session_state.recording_started = True
-                duration = 30  # seconds
-                sample_rate = 44100  # Sample rate
-                
-                # Wait for 30 seconds or until recording is finished
-                start_time = time.time()
-                while st.session_state.recording and (time.time() - start_time) < 30:
-                    time.sleep(0.1)  # Small sleep to prevent busy-waiting and allow Streamlit to update
+            # Start the recording
+            audio_data = st_audiorec()
+      
+            st.session_state.recording_started = True
+            duration = 30  # seconds
+            sample_rate = 44100  # Sample rate
+            
+            # Wait for 30 seconds or until recording is finished
+            start_time = time.time()
+            while st.session_state.recording and (time.time() - start_time) < duration:
+                time.sleep(0.1)  # Small sleep to prevent busy-waiting and allow Streamlit to update
 
-                st.session_state.recording = False
-                if audio_data:
-                    st.session_state.audio_data = audio_data
+            st.session_state.recording = False
+            if audio_data:
+                st.session_state.audio_data = audio_data
+            else:
+                st.write("NO AUDIO DATA.")
                     
             # Handle recording completion
             if not st.session_state.recording and st.session_state.audio_data:
                 st.write("Recording complete!")
+                st.session_state.recording_started = False
 
                 # Save the audio data as a WAV file
                 output_file = "output2.wav"
                 with wave.open(output_file, 'wb') as wf:
                     wf.setnchannels(1)  # Mono
                     wf.setsampwidth(2)  # Sample width in bytes
-                    wf.setframerate(44100)  # Sample rate in Hz (default value)
+                    wf.setframerate(sample_rate)  # Sample rate in Hz (default value)
                     wf.writeframes(st.session_state.audio_data)
 
                 st.audio(output_file)  # Display the audio player
@@ -141,4 +141,4 @@ def app():
                 model_description = describe_image(st.session_state.image_url)
                 compare_descriptions(model_description, user_description)
             else:
-                st.write("Audio not recorded")
+                st.write("Audio not recorded.")

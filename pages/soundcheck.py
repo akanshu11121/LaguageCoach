@@ -1,23 +1,59 @@
-import sounddevice as sd
+# import sounddevice as sd
+import pyaudio
 import numpy as np
 import wave
+
+# # Parameters
+# duration = 10  # seconds
+# sample_rate = 44100  # Sample rate in Hz
+
+# # Record audio
+# print("Recording...")
+# audio_data = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=2, dtype='int16')
+# sd.wait()  # Wait until the recording is finished
+# print("Recording complete")
 
 # Parameters
 duration = 10  # seconds
 sample_rate = 44100  # Sample rate in Hz
+channels = 2  # Number of audio channels
 
-# Record audio
+# Setup PyAudio
+p = pyaudio.PyAudio()
+
+# Open stream for recording
+stream = p.open(format=pyaudio.paInt16,
+                channels=channels,
+                rate=sample_rate,
+                input=True,
+                frames_per_buffer=1024)
+
 print("Recording...")
-audio_data = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=2, dtype='int16')
-sd.wait()  # Wait until the recording is finished
+
+frames = []
+for _ in range(0, int(sample_rate / 1024 * duration)):
+    data = stream.read(1024)
+    frames.append(data)
+
 print("Recording complete")
+
+# Stop and close the stream
+stream.stop_stream()
+stream.close()
+p.terminate()
 
 # Save as WAV file
 output_file = "output.wav"
-with wave.open(output_file, 'w') as wf:
-    wf.setnchannels(2)  # Stereo
-    wf.setsampwidth(2)  # Sample width in bytes
+# with wave.open(output_file, 'w') as wf:
+#     wf.setnchannels(2)  # Stereo
+#     wf.setsampwidth(2)  # Sample width in bytes
+#     wf.setframerate(sample_rate)
+#     wf.writeframes(audio_data.tobytes())
+# Save the audio to a file
+with wave.open(output_file, 'wb') as wf:
+    wf.setnchannels(channels)
+    wf.setsampwidth(pyaudio.PyAudio().get_sample_size(pyaudio.paInt16))
     wf.setframerate(sample_rate)
-    wf.writeframes(audio_data.tobytes())
+    wf.writeframes(b''.join(frames))
 
 print(f"Audio saved to {output_file}")

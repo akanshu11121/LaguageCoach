@@ -110,8 +110,7 @@ def app():
             sample_rate = 44100  # Sample rate
             
             if st.button('Stop Recording'):
-                st.session_state.recording = False
-                
+                st.write("Recording stopped")              
                 
                 # Wait for 30 seconds or until recording is finished
                 # start_time = time.time()

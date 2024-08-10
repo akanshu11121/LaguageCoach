@@ -1,7 +1,7 @@
 import streamlit as st
 import openai
 from openai import OpenAI
-client = OpenAI(api_key=st.secters["API_KEY"])
+client = OpenAI(api_key=st.secrets["API_KEY"])
 
 
 def generate_random_sentence():

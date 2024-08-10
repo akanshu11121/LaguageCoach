@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import time
 import numpy as np
 # import sounddevice as sd
 from st_audiorec import st_audiorec
@@ -100,7 +101,7 @@ def app():
             # myrecording = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=1, dtype='int16')
             audio_data = st_audiorec()
             # sd.wait()  # Wait until recording is finished
-            
+            time.sleep(30)
             output_file = "output2.wav"
             if audio_data is not None:
 

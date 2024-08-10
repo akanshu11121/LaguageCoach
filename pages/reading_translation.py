@@ -4,7 +4,7 @@ import openai
 import os
 from openai import OpenAI
 
-client = OpenAI(api_key=os.getenv("API_KEY"))
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 def generate_random_sentence():

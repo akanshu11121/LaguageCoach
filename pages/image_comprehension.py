@@ -101,7 +101,14 @@ def app():
             # myrecording = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=1, dtype='int16')
             audio_data = st_audiorec()
             # sd.wait()  # Wait until recording is finished
-            time.sleep(30)
+            
+            # Wait for 30 seconds or until recording is finished
+            start_time = time.time()
+            
+            while st.session_state.recording_started and (time.time() - start_time) < 30:
+              time.sleep(0.1)  # Small sleep to prevent busy-waiting and allow Streamlit to update
+              st.write('Recording....keep speaking...!!')
+
             output_file = "output2.wav"
             if audio_data is not None:
 

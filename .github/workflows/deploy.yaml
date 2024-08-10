@@ -1,20 +1,23 @@
-# Use a base image with Python
-FROM python:3.10-slim
+name: Deploy Streamlit App
 
-# Install PortAudio
-RUN apt-get update && \
-    apt-get install -y portaudio19-dev && \
-    rm -rf /var/lib/apt/lists/*
+on:
+  push:
+    branches:
+      - main
 
-# Set the working directory
-WORKDIR /app
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
 
-# Copy the requirements file and install dependencies
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-# Copy the rest of the application code
-COPY . .
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v2
 
-# Command to run the Streamlit app
-CMD ["streamlit", "run", "app.py"]
+    - name: Build Docker image
+      run: docker build -t my-streamlit-app .
+
+    - name: Run Docker container
+      run: docker run -p 8501:8501 my-streamlit-app

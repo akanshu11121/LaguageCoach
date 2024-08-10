@@ -1,7 +1,7 @@
-# Use a base image with Python
+# Use an official Python runtime as a parent image
 FROM python:3.10-slim
 
-# Install PortAudio
+# Install PortAudio and any other required packages
 RUN apt-get update && \
     apt-get install -y portaudio19-dev && \
     rm -rf /var/lib/apt/lists/*
@@ -9,7 +9,7 @@ RUN apt-get update && \
 # Set the working directory
 WORKDIR /app
 
-# Copy the requirements file and install dependencies
+# Copy the requirements file and install Python dependencies
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 

@@ -2,8 +2,8 @@
 FROM python:3.10-slim
 
 # Install PortAudio and any other required packages
-RUN apt-get update && \
-    apt-get install -y portaudio19-dev && \
+RUN sudo apt-get update && \
+    sudo apt-get install -y portaudio19-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # Set the working directory

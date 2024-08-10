@@ -124,5 +124,7 @@ def app():
                 user_description = speech_to_text("output2.wav")
                 model_description = describe_image(st.session_state.image_url)
                 compare_descriptions(model_description, user_description)
+            else:
+              st.write("Audio not recorded")
 
 

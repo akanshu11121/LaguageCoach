@@ -100,18 +100,15 @@ def app():
             # myrecording = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=1, dtype='int16')
             audio_data = st_audiorec()
             # sd.wait()  # Wait until recording is finished
-            st.write('Recording Done!')
-            st.session_state.recording_started = False
-            # Convert the NumPy array to audio file
-            st.write('Recording stopped.')
-            # output_file = "output2.wav"
-            # with wave.open(output_file, 'w') as wf:
-            #     wf.setnchannels(1)  # Stereo
-            #     wf.setsampwidth(2)  # Sample width in bytes
-            #     wf.setframerate(sample_rate)
-            #     wf.writeframes(myrecording.tobytes())
+            
             output_file = "output2.wav"
             if audio_data is not None:
+
+                st.write('Recording Done!')
+                st.session_state.recording_started = False
+                # Convert the NumPy array to audio file
+                st.write('Recording stopped.')
+
                 # Save the audio data as a WAV file
                 with wave.open(output_file, 'wb') as wf:
                     wf.setnchannels(1)  # Mono
@@ -122,9 +119,9 @@ def app():
                 st.audio(output_file)  # Display the audio player
                 st.success(f"Audio saved to {output_file}")
 
-            print(f"Audio saved to {output_file}")
-            user_description = speech_to_text("output2.wav")
-            model_description = describe_image(st.session_state.image_url)
-            compare_descriptions(model_description, user_description)
+                print(f"Audio saved to {output_file}")
+                user_description = speech_to_text("output2.wav")
+                model_description = describe_image(st.session_state.image_url)
+                compare_descriptions(model_description, user_description)
 
 
